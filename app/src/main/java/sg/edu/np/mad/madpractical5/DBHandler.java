@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-public class DBHelper extends SQLiteOpenHelper {
+public class DBHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "users.db";
     private static final int DATABASE_VERSION = 1;
     private static final String USERS = "User";
@@ -20,8 +20,10 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_DESC = "description";
     private static final String COLUMN_FOLL = "followed";
 
-    public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version){
+
+        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+
     }
 
     @Override
@@ -79,9 +81,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
 //  Add a user record
 
-    public User getrUser(int user_id) {
+    public User getUser(int user_id) {
         SQLiteDatabase db = getReadableDatabase();
-        User user = new User("johnny", "johndoe", 3, false);
+        User user = new User("John Doe", "MAD Developer", 1, false);
         Cursor cursor = db.query(USERS, new String[] { COLUMN_NAME, COLUMN_DESC, COLUMN_ID, COLUMN_FOLL}, COLUMN_ID + "=?",
                 new String[] { String.valueOf(user_id) }, null, null, null, null);
 
@@ -100,5 +102,32 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 //      db.close();
         return user;
+    }
+
+    public ArrayList<User> getUsers() {
+        SQLiteDatabase db = getWritableDatabase();
+        ArrayList<User> userList = new ArrayList<>();
+        String query = "SELECT * FROM " + USERS;
+        Cursor cursor = db.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt((int)cursor.getColumnIndex("id"));
+            String name = cursor.getString((int)cursor.getColumnIndex("name"));
+            String description = cursor.getString((int)cursor.getColumnIndex("description"));
+            String  followed = cursor.getString((int)cursor.getColumnIndex("followed"));
+            User user = new User(name, description, id, Boolean.parseBoolean(followed));
+            userList.add(user);
+        }
+        cursor.close();
+        return userList;
+    }
+
+    public void updateUser(User user){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FOLL,  user.getFollowed());
+        String clause = "id=?";
+        String[] args = {String.valueOf(user.getId())};
+        db.update(USERS, values, clause, args);
     }
 }

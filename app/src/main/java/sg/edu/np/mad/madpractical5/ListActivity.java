@@ -34,20 +34,9 @@ public class ListActivity extends AppCompatActivity {
             return insets;
         });
 
-        List<User> userList = new ArrayList<>();
-        Random random = new Random();
+        DBHandler DatabaseHandler = new DBHandler(this, null, null, 1);
 
-        for (int i = 0; i < 20; i++) {
-            int name = new Random().nextInt(9999999);;
-            int description = new Random().nextInt(9999999);;
-            boolean followed = random.nextBoolean();
-
-            User user = new User("John Doe", "MAD Developer", 1, false);
-            user.setName("Name"+String.valueOf(name));
-            user.setDescription("Description"+String.valueOf(description));
-            user.setFollowed(followed);
-            userList.add(user);
-        }
+        ArrayList<User> userList = new ArrayList<>(DatabaseHandler.getUsers());
 
         UserAdapter userAdapter = new UserAdapter(userList, this);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);

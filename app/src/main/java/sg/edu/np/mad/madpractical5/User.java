@@ -11,6 +11,7 @@ public class User {
     public void setFollowed(boolean followed) {this.followed = followed;}
     public String getName() {return name;}
     public String getDescription() {return description;}
+    public int getId() {return id;}
     public boolean getFollowed() {return followed;}
     public User() {}
     public User(String name, String description, int id, boolean followed) {

@@ -26,10 +26,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        User user = new User("John Doe", "MAD Developer", 1, false);
-        user.setDescription("MAD Developer");
-        user.setId(1);
-        user.setFollowed(false);
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
 
         // Find the TextView by its ID
         TextView tvName = findViewById(R.id.name);
@@ -37,27 +34,19 @@ public class MainActivity extends AppCompatActivity {
         Button followButton = findViewById(R.id.button);
         Button msgButton = findViewById(R.id.button2);
 
-        // Generate a random integer
-        Random random = new Random();
-        int min = 100000; // minimum value
-        int max = 999999; // maximum value
-
-        int randomNumber = random.nextInt((max - min) + 1) + min;
-
         Intent intent = getIntent();
-        if (intent != null) {
-            String name = getIntent().getStringExtra("keyName");
-            String desc = getIntent().getStringExtra("keyDesc");
-            Boolean foll = getIntent().getBooleanExtra("keyFoll", false);
-            tvName.setText(name);
-            tvDescription.setText(desc);
-            if (foll){
-                followButton.setText("Unfollow");
-            }
+        String name = intent.getStringExtra("name");
+        String description = intent.getStringExtra("name");
+        tvName.setText(name);
+        tvDescription.setText(description);
+
+        User user = dbHandler.getUser(name);
+
+        if (user.getFollowed()){
+            followButton.setText("Unfollow");
         }
         else {
-            tvName.setText(user.getName()+randomNumber);
-            tvDescription.setText(user.getDescription());
+            followButton.setText("Follow");
         }
 
         // Set an OnClickListener to handle the toggle logic
