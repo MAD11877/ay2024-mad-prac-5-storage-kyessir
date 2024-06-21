@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        DatabaseHandler dbHandler = new DatabaseHandler(this, null, null, 1);
 
         // Find the TextView by its ID
         TextView tvName = findViewById(R.id.name);
