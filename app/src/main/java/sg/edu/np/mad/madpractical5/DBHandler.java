@@ -75,7 +75,6 @@ public class DBHandler extends SQLiteOpenHelper {
             user.setFollowed(cursor.getInt(cursor.getColumnIndex(COLUMN_FOLL)) == 1);
         }
         cursor.close();
-        //db.close();
         return user;
     }
 
@@ -100,7 +99,6 @@ public class DBHandler extends SQLiteOpenHelper {
             user.setFollowed(followed);
             cursor.close();
         }
-//      db.close();
         return user;
     }
 
@@ -129,5 +127,10 @@ public class DBHandler extends SQLiteOpenHelper {
         String clause = "id=?";
         String[] args = {String.valueOf(user.getId())};
         db.update(USERS, values, clause, args);
+    }
+
+    public void close() {
+        Log.i("Database Operations", "Database is closed.");
+        super.close();
     }
 }
